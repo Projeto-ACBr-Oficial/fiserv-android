@@ -4,6 +4,7 @@ import android.app.Application
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.request.crossfade
+import com.mjtech.fiserv.msitef.di.msitefModule
 import com.mjtech.store.data.mock.di.mockDataModule
 import com.mjtech.store.di.appModule
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +18,8 @@ class OpenStoreApplication : Application(), SingletonImageLoader.Factory {
             androidContext(this@OpenStoreApplication)
             modules(
                 appModule,
-                mockDataModule
+                mockDataModule,
+                msitefModule
             )
         }
     }

@@ -38,12 +38,6 @@ internal class MockPaymentRepository : PaymentRepository {
                 name = PaymentType.VOUCHER.text,
                 maxInstallments = 1,
                 requiresInstallments = false
-            ),
-            PaymentMethod(
-                id = PaymentType.INSTANT_PAYMENT.name,
-                name = PaymentType.INSTANT_PAYMENT.text,
-                maxInstallments = 1,
-                requiresInstallments = false
             )
         )
         emit(Result.Success(mockMethods))
@@ -58,10 +52,7 @@ internal class MockPaymentRepository : PaymentRepository {
             PaymentType.CREDIT.name -> listOf(
                 createInstallment(1, totalAmount, 0.0),
                 createInstallment(2, totalAmount, 0.0),
-                createInstallment(3, totalAmount, 0.0),
-                createInstallment(4, totalAmount, 0.0),
-                createInstallment(5, totalAmount, 0.0),
-                createInstallment(6, totalAmount, 0.0)
+                createInstallment(3, totalAmount, 0.0)
             )
 
             else -> listOf(createInstallment(1, totalAmount, 0.0))
