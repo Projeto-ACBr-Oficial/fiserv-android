@@ -45,6 +45,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data:mock"))
 
+    implementation(project(":fiserv:msitef"))
+
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
 
