@@ -58,16 +58,31 @@ class MSitefPaymentActivity : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("MSitefPaymentActivity", "onActivityResult: requestCode=$requestCode, resultCode=$resultCode")
+        Log.d(TAG, "onActivityResult: requestCode=$requestCode, resultCode=$resultCode")
         if (requestCode == FISERV_REQUEST_CODE) {
             val callback = MSitefPaymentHolder.callback
 
             when (resultCode) {
                 RESULT_OK -> {
-                    callback?.onSuccess("", "Pagamento concluído.")
+                    val response = MSitefPaymentResponse(data)
+                    Log.d(TAG, "Payment Response: $response")
+
+                    // Verifica o código de resposta para determinar o sucesso ou falha do pagamento
+                    if (response.codResp == "0") {
+                        callback?.onSuccess(
+                            MSitefPaymentHolder.payment?.id.toString(),
+                            "Pagamento concluído."
+                        )
+                    } else {
+                        callback?.onFailure(
+                            response.codResp ?: "UNKNOWN_ERROR",
+                            "Erro no pagamento."
+                        )
+                    }
                 }
+
                 RESULT_CANCELED -> {
-                    callback?.onFailure("PAYMENT_CANCELED", "Pagamento cancelado.")
+                    callback?.onCancelled("Pagamento cancelado.")
                 }
 
                 else -> {
@@ -82,6 +97,7 @@ class MSitefPaymentActivity : AppCompatActivity() {
 
 
     companion object {
+        const val TAG = "MSitefPaymentActivity"
         const val FISERV_INTENT_KEY = "fiserv_intent"
     }
 }
