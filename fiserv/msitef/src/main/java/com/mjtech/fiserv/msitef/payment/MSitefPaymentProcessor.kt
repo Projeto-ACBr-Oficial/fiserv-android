@@ -3,6 +3,12 @@ package com.mjtech.fiserv.msitef.payment
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.mjtech.fiserv.msitef.common.ACESSIBILIDADE_VISUAL
+import com.mjtech.fiserv.msitef.common.CNPJ_CPF
+import com.mjtech.fiserv.msitef.common.EMPRESA_SITEF
+import com.mjtech.fiserv.msitef.common.ENDERECO_SITEF
+import com.mjtech.fiserv.msitef.common.OPERADOR
+import com.mjtech.fiserv.msitef.common.TIMEOUT_COLETA
 import com.mjtech.fiserv.msitef.common.getCurrentDate
 import com.mjtech.fiserv.msitef.common.getCurrentTime
 import com.mjtech.fiserv.msitef.common.toStringWithoutDots
@@ -24,16 +30,16 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
             payment.installmentDetails?.installments ?: 1
         )
 
-        Log.d("PaymentProcessor", payment.toString())
+        Log.d(TAG, payment.toString())
 
         val i = Intent("br.com.softwareexpress.sitef.msitef.ACTIVITY_CLISITEF").apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
             // Parâmetros de entrada para o SiTef
-            putExtra("empresaSitef", "00000000")
-            putExtra("enderecoSitef", "127.0.0.1;127.0.0.1:20036")
-            putExtra("operador", "0001")
-            putExtra("CNPJ_CPF", "12345678912345")
+            putExtra("empresaSitef", EMPRESA_SITEF)
+            putExtra("enderecoSitef", ENDERECO_SITEF)
+            putExtra("operador", OPERADOR)
+            putExtra("CNPJ_CPF", CNPJ_CPF)
 
             // Dados da transação
             putExtra("data", getCurrentDate())
@@ -49,12 +55,12 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
             }
 
             // Confiugurações adicionais
-            putExtra("acessibilidadeVisual", "0")
-            putExtra("timeoutColeta", "60")
+            putExtra("acessibilidadeVisual", ACESSIBILIDADE_VISUAL)
+            putExtra("timeoutColeta", TIMEOUT_COLETA)
 
             putExtra("restricoes", restricoes)
 
-            Log.d("PaymentProcessor", "Intent extras: ${this.extras}")
+            Log.d(TAG, "Intent extras: ${this.extras}")
         }
         context.startActivity(i)
     }
@@ -80,5 +86,9 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
             else -> "0"
         }
         return "TransacoesHabilitadas=$restrictionCode"
+    }
+
+    companion object {
+        const val TAG = "MSitefPaymentProcessor"
     }
 }
