@@ -1,5 +1,6 @@
 package com.mjtech.fiserv.msitef.payment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -33,8 +34,7 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
 
         Log.d(TAG, payment.toString())
 
-        val i = Intent("br.com.softwareexpress.sitef.msitef.ACTIVITY_CLISITEF").apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val fiservIntent = Intent("br.com.softwareexpress.sitef.msitef.ACTIVITY_CLISITEF").apply {
 
             // Parâmetros de entrada para o SiTef
             putExtra("empresaSitef", EMPRESA_SITEF)
@@ -69,7 +69,17 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
 
             Log.d(TAG, "Intent extras: ${this.extras}")
         }
-        context.startActivity(i)
+
+        MSitefPaymentHolder.initialize(callback, payment)
+
+        val paymentIntent = Intent(context, MSitefPaymentActivity::class.java).apply {
+            putExtra(MSitefPaymentActivity.FISERV_INTENT_KEY, fiservIntent)
+            if (context !is Activity) {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
+
+        context.startActivity(paymentIntent)
     }
 
     /** Mapeia o tipo de pagamento para o código esperado pelo SiTef */
