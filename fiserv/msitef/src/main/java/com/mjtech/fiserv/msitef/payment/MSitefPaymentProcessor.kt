@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.mjtech.fiserv.msitef.common.ACESSIBILIDADE_VISUAL
-import com.mjtech.fiserv.msitef.common.CD_HABILITADAS
 import com.mjtech.fiserv.msitef.common.CNPJ_CPF
 import com.mjtech.fiserv.msitef.common.EMPRESA_SITEF
 import com.mjtech.fiserv.msitef.common.ENDERECO_SITEF
@@ -55,12 +54,6 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
                 putExtra("numParcelas", payment.installmentDetails?.installments.toString())
             }
 
-            // Parâmetros específicos para o PIX
-            if (payment.type == PaymentType.PIX) {
-                putExtra("transacoesHabilitadas", "7;8;")
-                putExtra("cnpj_automacao", CNPJ_CPF)
-            }
-
             // Confiugurações adicionais
             putExtra("acessibilidadeVisual", ACESSIBILIDADE_VISUAL)
             putExtra("timeoutColeta", TIMEOUT_COLETA)
@@ -95,9 +88,7 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
 
     /** Mapeia as restrições de transação com base no tipo de pagamento e parcelamento */
     private fun mapRestriction(method: PaymentType, installment: Int): String {
-        val restrictionType =
-            if (method == PaymentType.PIX) "CarteirasDigitaisHabilitadas"
-            else "TransacoesHabilitadas"
+        val restrictionType = "TransacoesHabilitadas"
 
         val restrictionCode = when (method) {
             PaymentType.DEBIT -> "16"
@@ -105,7 +96,7 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
             PaymentType.CREDIT -> {
                 if (installment > 1) "27" else "26"
             }
-            PaymentType.PIX -> CD_HABILITADAS
+            PaymentType.PIX -> "7;8;3919"
             else -> "0"
         }
         return "$restrictionType=$restrictionCode"
