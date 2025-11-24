@@ -88,6 +88,7 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
             PaymentType.DEBIT -> "2"
             PaymentType.CREDIT -> "3"
             PaymentType.PIX -> "122"
+            PaymentType.VOUCHER -> "2"
             else -> "0"
         }
     }
@@ -97,12 +98,13 @@ internal class MSitefPaymentProcessor(private val context: Context) : PaymentPro
         val restrictionType =
             if (method == PaymentType.PIX) "CarteirasDigitaisHabilitadas"
             else "TransacoesHabilitadas"
+
         val restrictionCode = when (method) {
             PaymentType.DEBIT -> "16"
+            PaymentType.VOUCHER -> "16"
             PaymentType.CREDIT -> {
                 if (installment > 1) "27" else "26"
             }
-
             PaymentType.PIX -> CD_HABILITADAS
             else -> "0"
         }

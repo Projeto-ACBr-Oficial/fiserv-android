@@ -58,14 +58,15 @@ class MSitefPaymentActivity : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d(TAG, "onActivityResult: requestCode=$requestCode, resultCode=$resultCode")
+
         if (requestCode == FISERV_REQUEST_CODE) {
             val callback = MSitefPaymentHolder.callback
 
+            val response = MSitefPaymentResponse(data)
+            Log.d(TAG, "Payment Response: $response")
+
             when (resultCode) {
                 RESULT_OK -> {
-                    val response = MSitefPaymentResponse(data)
-                    Log.d(TAG, "Payment Response: $response")
 
                     // Verifica o código de resposta para determinar o sucesso ou falha do pagamento
                     if (response.codResp == "0") {
