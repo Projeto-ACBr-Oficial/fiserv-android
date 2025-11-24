@@ -19,9 +19,11 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "open-store"
+rootProject.name = "fiserv-android"
 include(":app")
 include(":domain")
 include(":data:common")
 include(":data:mock")
+// fiserv modules
+include(":fiserv:msitef")
 include(":fiserv:clisitef")
